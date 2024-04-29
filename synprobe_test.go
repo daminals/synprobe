@@ -82,17 +82,6 @@ func TestDLPTest(t *testing.T) {
 	evalResponse(t, response, expectedResponse)
 }
 
-// smtp.gmail.com 25
-// func TestGmail(t *testing.T) {
-// 	// TCP SERVER INITIATED
-// 	service := "smtp.gmail.com"
-// 	port := "25"
-
-// 	response := runResponse(service, port)
-// 	expectedResponse := createTCPServerInitiatedResponse()
-// 	evalResponse(t, response, expectedResponse)
-// }
-
 // TCP CLIENT INITIATED [HTTP]
 // www.cs.stonybrook.edu 80
 func TestStonyBrook(t *testing.T) {
