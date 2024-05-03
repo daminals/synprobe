@@ -93,6 +93,17 @@ func TestStonyBrook(t *testing.T) {
 	evalResponse(t, response, expectedResponse)
 }
 
+// TLS CLIENT INITIATED [HTTP]
+// www.cs.stonybrook.edu 80
+func TestStonyBrookTLS(t *testing.T) {
+	service := "www.cs.stonybrook.edu"
+	port := "443"
+
+	response := runResponse(service, port)
+	expectedResponse := createHTTPSClientInitiatedResponse()
+	evalResponse(t, response, expectedResponse)
+}
+
 // TLS CLIENT INITIATED [HTTPS]
 // www.cs.stonybrook.edu 443
 func TestGoogle(t *testing.T) {

@@ -12,7 +12,7 @@ import (
 )
 
 
-var PROBES = map[string]string{"generic": "\r\n\r\n\r\n\r\n", "http": "GET / HTTP/1.0\r\n\r\n"}
+var PROBES = map[string]string{"http": "GET / HTTP/1.0\r\n\r\n", "generic": "\r\n\r\n\r\n\r\n"}
 
 // read CA certs
 func readCerts() *tls.Config {
@@ -166,10 +166,16 @@ func readResponse(conn net.Conn) (int, []byte) {
 
 
 func queryPort(response PortResponse) PortResponse {
+		if response.TLS {
+			return response
+		}
+
+
 		// make a tcp connection to the target
 		conn, err := net.Dial("tcp", response.Target + ":" + response.Port)
 		if err != nil {
 			// log.Println("Error connecting to", target + ":" + port)
+			response.Open = false
 			return response
 		}
 		response.Open = true
@@ -237,8 +243,10 @@ func queryPortTLS(response PortResponse) PortResponse {
 		conf := readCerts()
 		// make a tls connection to the target
 		conn, err := tls.Dial("tcp", response.Target + ":" + response.Port, conf)
+
 		if err != nil {
 			// log.Println("Error connecting to", response.Target + ":" + response.Port)
+			response.Open = false
 			return response
 		}
 		defer conn.Close()
@@ -278,7 +286,9 @@ func queryPortTLS(response PortResponse) PortResponse {
 		// check probe type
 		switch name {
 			case "http":
-				response.HTTPS = true
+				if strings.Contains(string(buf), "HTTP") {
+					response.HTTPS = true
+				}
 			case "generic":
 				// pretend to do something
 			default:
